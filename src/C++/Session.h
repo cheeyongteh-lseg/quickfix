@@ -207,6 +207,11 @@ public:
   void setValidateLengthAndChecksum ( bool value )
     { m_validateLengthAndChecksum = value; }
 
+  bool getValidateIncomingMessage()
+    { return m_validateIncomingMessage; }
+  void setValidateIncomingMessage ( bool value )
+    { m_validateIncomingMessage = value; }
+
   void setResponder( Responder* pR )
   {
     if( !checkSessionTime(UtcTimeStamp()) )
@@ -331,7 +336,8 @@ private:
   int m_timestampPrecision;
   bool m_persistMessages;
   bool m_validateLengthAndChecksum;
-
+  bool m_validateIncomingMessage;
+  
   SessionState m_state;
   DataDictionaryProvider m_dataDictionaryProvider;
   MessageStoreFactory& m_messageStoreFactory;

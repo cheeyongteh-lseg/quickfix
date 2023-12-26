@@ -61,6 +61,7 @@ Session::Session( Application& application,
   m_timestampPrecision( 3 ),
   m_persistMessages( true ),
   m_validateLengthAndChecksum( true ),
+  m_validateIncomingMessage( true ),
   m_dataDictionaryProvider( dataDictionaryProvider ),
   m_messageStoreFactory( messageStoreFactory ),
   m_pLogFactory( pLogFactory ),
@@ -1329,20 +1330,31 @@ void Session::next( const Message& message, const UtcTimeStamp& timeStamp, bool 
       }
     }
 
-    const DataDictionary& sessionDataDictionary = 
+    try
+    {
+      const DataDictionary& sessionDataDictionary = 
         m_dataDictionaryProvider.getSessionDataDictionary(m_sessionID.getBeginString());
 
-    if( m_sessionID.isFIXT() && message.isApp() )
-    {
-      ApplVerID applVerID = m_targetDefaultApplVerID;
-      header.getFieldIfSet(applVerID);
-      const DataDictionary& applicationDataDictionary = 
-        m_dataDictionaryProvider.getApplicationDataDictionary(applVerID);
-      DataDictionary::validate( message, &sessionDataDictionary, &applicationDataDictionary );
+      if( m_sessionID.isFIXT() && message.isApp() )
+      {
+        ApplVerID applVerID = m_targetDefaultApplVerID;
+        header.getFieldIfSet(applVerID);
+        const DataDictionary& applicationDataDictionary = 
+          m_dataDictionaryProvider.getApplicationDataDictionary(applVerID);
+        DataDictionary::validate( message, &sessionDataDictionary, &applicationDataDictionary );
+      }
+      else
+      {
+        sessionDataDictionary.validate( message );
+      }
     }
-    else
+    catch(std::exception& e)
     {
-      sessionDataDictionary.validate( message );
+      if (m_validateIncomingMessage)
+      {
+        throw;
+      }
+      m_state.onEvent( "Warning: Message Validaton Failed: " + e.what() );
     }
 
     if ( msgType == MsgType_Logon )
