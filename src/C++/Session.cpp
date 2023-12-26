@@ -1354,7 +1354,7 @@ void Session::next( const Message& message, const UtcTimeStamp& timeStamp, bool 
       {
         throw;
       }
-      m_state.onEvent( "Warning: Message Validaton Failed: " + e.what() );
+      m_state.onEvent( std::string("Warning: Message Validaton Failed: ") + e.what() );
     }
 
     if ( msgType == MsgType_Logon )
