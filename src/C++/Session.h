@@ -212,6 +212,11 @@ public:
   void setValidateIncomingMessage ( bool value )
     { m_validateIncomingMessage = value; }
 
+  bool getAllowMissingRequiredField()
+    { return m_allowMissingRequiredField; }
+  void setAllowMissingRequiredField ( bool value )
+    { m_allowMissingRequiredField = value; }
+
   void setResponder( Responder* pR )
   {
     if( !checkSessionTime(UtcTimeStamp()) )
@@ -337,6 +342,7 @@ private:
   bool m_persistMessages;
   bool m_validateLengthAndChecksum;
   bool m_validateIncomingMessage;
+  bool m_allowMissingRequiredField;
   
   SessionState m_state;
   DataDictionaryProvider m_dataDictionaryProvider;

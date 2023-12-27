@@ -198,7 +198,8 @@ Session* SessionFactory::create( const SessionID& sessionID,
     pSession->setValidateLengthAndChecksum( settings.getBool( VALIDATE_LENGTH_AND_CHECKSUM ) );
   if ( settings.has( VALIDATE_INCOMING_MESSAGE ) )
     pSession->setValidateIncomingMessage( settings.getBool( VALIDATE_INCOMING_MESSAGE ) );
-   
+  if ( settings.has( ALLOW_MISSING_REQUIRED_FIELD ) )
+    pSession->setAllowMissingRequiredField( settings.getBool( ALLOW_MISSING_REQUIRED_FIELD ) );
   return pSession.release();
 }
 

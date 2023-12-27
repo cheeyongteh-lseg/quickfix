@@ -62,6 +62,7 @@ Session::Session( Application& application,
   m_persistMessages( true ),
   m_validateLengthAndChecksum( true ),
   m_validateIncomingMessage( true ),
+  m_allowMissingRequiredField( false ),
   m_dataDictionaryProvider( dataDictionaryProvider ),
   m_messageStoreFactory( messageStoreFactory ),
   m_pLogFactory( pLogFactory ),
@@ -1321,9 +1322,17 @@ void Session::next( const Message& message, const UtcTimeStamp& timeStamp, bool 
     {
       if( m_sessionID.isFIXT() )
       {
-        auto applVerID = DefaultApplVerID{ApplVerID_FIX50SP2};
-        message.getFieldIfSet(applVerID);
-        setTargetDefaultApplVerID(applVerID);
+        if (m_allowMissingRequiredField)
+        {
+          auto applVerID = DefaultApplVerID{m_senderDefaultApplVerID};
+          message.getFieldIfSet(applVerID);
+          setTargetDefaultApplVerID(applVerID);
+        }
+        else
+        {
+          const DefaultApplVerID& applVerID = FIELD_GET_REF( message, DefaultApplVerID );
+          setTargetDefaultApplVerID(applVerID);
+        }
       }
       else
       {
