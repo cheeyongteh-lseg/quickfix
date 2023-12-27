@@ -1321,7 +1321,8 @@ void Session::next( const Message& message, const UtcTimeStamp& timeStamp, bool 
     {
       if( m_sessionID.isFIXT() )
       {
-        const DefaultApplVerID& applVerID = FIELD_GET_REF( message, DefaultApplVerID );
+        auto applVerID = DefaultApplVerID{ApplVerID_FIX50SP2};
+        message.getFieldIfSet(applVerID);
         setTargetDefaultApplVerID(applVerID);
       }
       else
