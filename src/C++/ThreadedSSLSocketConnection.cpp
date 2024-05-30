@@ -265,10 +265,11 @@ bool ThreadedSSLSocketConnection::read()
           }
           else
           {
-            char errbuf[200];
+            char errbuf[256];
 
-            socket_error(errbuf, sizeof(errbuf));
-
+            //socket_error(errbuf, sizeof(errbuf));
+            ERR_error_string_n(ERR_get_error(), errbuf, sizeof(errbuf));
+       
             if (m_pSession)
               m_pSession->getLog()->onEvent("SSL read error <" +
                                             IntConvertor::convert(errCodeSSL) +
