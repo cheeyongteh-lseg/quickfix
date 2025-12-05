@@ -37,6 +37,14 @@
 #include <string>
 #include <time.h>
 
+#if !defined(QUICKFIX_DEPRECATED_ATTR)
+#if defined(SWIG)
+#define QUICKFIX_DEPRECATED_ATTR(message)
+#else
+#define QUICKFIX_DEPRECATED_ATTR(message) [[deprecated(message)]]
+#endif
+#endif
+
 namespace FIX {
 /*! \addtogroup user
  *  @{
@@ -501,7 +509,7 @@ public:
   static UtcTimeStamp now() { return UtcTimeStamp(DateTime::nowUtc()); }
 
   /// Defaults to the current date and time
-  [[deprecated("Use UtcTimeStamp::now()")]]
+  QUICKFIX_DEPRECATED_ATTR("Use UtcTimeStamp::now()")
   UtcTimeStamp()
       : DateTime(DateTime::nowUtc()) {}
 

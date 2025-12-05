@@ -113,7 +113,7 @@ public:
     m_data.clear();
   }
 
-  [[deprecated("Use setTag")]]
+  QUICKFIX_DEPRECATED_ATTR("Use setTag")
   void setField(int field) {
     setTag(field);
   }
@@ -127,7 +127,7 @@ public:
   /// Get the fields integer tag.
   int getTag() const { return m_tag; }
 
-  [[deprecated("Use getTag")]]
+  QUICKFIX_DEPRECATED_ATTR("Use getTag")
   int getField() const {
     return getTag();
   }
